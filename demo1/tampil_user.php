@@ -71,10 +71,9 @@
                                                         <tr>
                                                             <th>No.</th>
                                                             <th>NIK / Nama</th>
-                                                            <th>TTL</th>
+                                                            <th>Tempat, Tanggal Lahir</th>
                                                             <th>Alamat</th>
                                                             <th>Jenis Kelamin</th>
-                                                            <th>Status Warga</th>
                                                             <th>Password</th>
                                                             <th>Hak Akses</th>
                                                             <th style="width: 10%">Action</th>
@@ -83,7 +82,7 @@
                                                     <tbody>
                                                         <?php
                                                             $no=1;
-                                                            $tampil = "SELECT * FROM data_user";
+                                                            $tampil = "SELECT * FROM data_user ";
                                                             $query = mysqli_query($konek,$tampil);
                                                             while($data=mysqli_fetch_array($query,MYSQLI_BOTH)){
                                                                 $username = $data['nik'];
@@ -93,7 +92,6 @@
                                                                 $tanggal = $data['tanggal_lahir'];
                                                                 $alamat = $data['alamat'];
                                                                 $jekel = $data['jekel'];
-                                                                $status_warga = $data['status_warga'];
                                                                 $tanggal_lahir = date("d-F-Y", strtotime($tanggal));
                                                                 $hak_akses = $data['hak_akses'];
                                                         ?>
@@ -103,7 +101,6 @@
                                                             <td><?php echo $tempat.", ".$tanggal_lahir;?></td>
                                                             <td><?php echo $alamat;?></td>
                                                             <td><?php echo $jekel;?></td>
-                                                            <td><?php echo $status_warga;?></td>
                                                             <td><?php echo $password;?></td>
                                                             <td><?php echo $hak_akses;?></td>
                                                             <td>

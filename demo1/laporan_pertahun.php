@@ -4,101 +4,56 @@ include '../konek.php';
 date_default_timezone_set('Asia/Jakarta');
 ?>
 <?php
-	if(!isset($_POST['tampilkan'])){
-		$tahun = isset($_POST['tahun']) ? $_POST['tahun'] : '';
-		$sql = "SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_sktm.acc,
-		data_request_sktm.keperluan,
-		data_request_sktm.request
-	FROM
-		data_user
-	INNER JOIN data_request_sktm ON data_request_sktm.nik = data_user.nik
-	WHERE data_request_sktm.status = 3
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_skd.acc,
-		data_request_skd.keperluan,
-		data_request_skd.request
-	FROM
-		data_user
-	INNER JOIN data_request_skd ON data_request_skd.nik = data_user.nik
-	WHERE data_request_skd.status = 3
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_skp.acc,
-		data_request_skp.keperluan,
-		data_request_skp.request
-	FROM
-		data_user
-	INNER JOIN data_request_skp ON data_request_skp.nik = data_user.nik
-	WHERE data_request_skp.status = 3
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_sku.acc,
-		data_request_sku.keperluan,
-		data_request_sku.request
-	FROM
-		data_user
-	INNER JOIN data_request_sku ON data_request_sku.nik = data_user.nik
-	WHERE data_request_sku.status = 3";
-	$query = mysqli_query($konek,$sql);
 
-	}elseif(isset($_POST['tampilkan'])){
-		$tahun = isset($_POST['tahun']) ? $_POST['tahun'] : '';
+		@$tahun = $_POST['tahun'];
+		if($tahun != ''){
+			$tahun = "AND year(data_request.acc) = '$tahun'";
+		} else {
+			$tahun = '';
+		}
 		$sql = "SELECT
 		data_user.nik,
 		data_user.nama,
-		data_request_sktm.acc,
-		data_request_sktm.keperluan,
-		data_request_sktm.request
+		data_request.acc,
+		data_request.id_berkas,
+		data_request.keterangan,
+		data_request.id_request
 	FROM
 		data_user
-	INNER JOIN data_request_sktm ON data_request_sktm.nik = data_user.nik
-	WHERE year(data_request_sktm.acc) = '$tahun'
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_skp.acc,
-		data_request_skp.keperluan,
-		data_request_skp.request
-	FROM
-		data_user
-	INNER JOIN data_request_skp ON data_request_skp.nik = data_user.nik
-	WHERE year(data_request_skp.acc) = '$tahun'
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_sku.acc,
-		data_request_sku.keperluan,
-		data_request_sku.request
-	FROM
-		data_user
-	INNER JOIN data_request_sku ON data_request_sku.nik = data_user.nik
-	WHERE year(data_request_sku.acc) = '$tahun'
-	UNION
-	SELECT
-		data_user.nik,
-		data_user.nama,
-		data_request_skd.acc,
-		data_request_skd.keperluan,
-		data_request_skd.request
-	FROM
-		data_user
-	INNER JOIN data_request_skd ON data_request_skd.nik = data_user.nik
-	WHERE year(data_request_skd.acc) = '$tahun'
-	";
+	INNER JOIN data_request ON data_request.nik = data_user.nik
+	WHERE data_request.status = 1 $tahun 
+	order by acc DESC";
 	$query = mysqli_query($konek,$sql);
-	}
+	// if(!isset($_POST['tampilkan'])){
+	// 	$tahun = isset($_POST['tahun']) ? $_POST['tahun'] : '';
+	// 	$sql = "SELECT
+	// 	data_user.nik,
+	// 	data_user.nama,
+	// 	data_request.acc,
+	// 	data_request.keterangan,
+	// 	data_request.id_request
+	// FROM
+	// 	data_user
+	// INNER JOIN data_request ON data_request.nik = data_user.nik
+	// WHERE data_request.status = 1";
+	// $sql = "SELECT * FROM data_request natural join data_user WHERE status=1 order by acc DESC";
+	// $query = mysqli_query($konek,$sql);
+
+	// }elseif(isset($_POST['tampilkan'])){
+	// 	$tahun = isset($_POST['tahun']) ? $_POST['tahun'] : '';
+	// 	$sql = "SELECT
+	// 	data_user.nik,
+	// 	data_user.nama,
+	// 	data_request=.acc,
+	// 	data_request.keterangan,
+	// 	data_request.id_request
+	// FROM
+	// 	data_user
+	// INNER JOIN data_request ON data_request.nik = data_user.nik
+	// WHERE year(data_request.acc) = '$tahun'";
+	// $sql = "SELECT * FROM data_request natural join data_user WHERE year(acc)='$tahun' order by acc DESC";
+	// $query = mysqli_query($konek,$sql);
+	// }
 
 ?>
 
@@ -106,7 +61,7 @@ date_default_timezone_set('Asia/Jakarta');
 					<div class="page-inner py-5">
 						<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
 							<div>
-								<h2 class="text-white pb-2 fw-bold">LAPORAN PERTAHUN REQUEST SURAT KETERANGAN</h2>
+								<h2 class="text-white pb-2 fw-bold">LAPORAN PERTAHUN SURAT KETERANGAN</h2>
 							</div>
 						</div>
 					</div>
@@ -121,7 +76,6 @@ date_default_timezone_set('Asia/Jakarta');
                                             <div class="form-group">
                                                 <select name="tahun" class="form-control">
 													<option value="">Pilih</option>
-                                                    <option value="2012">2012</option>
                                                     <option value="2013">2013</option>
                                                     <option value="2014">2014</option>
                                                     <option value="2015">2015</option>
@@ -131,6 +85,7 @@ date_default_timezone_set('Asia/Jakarta');
                                                     <option value="2019">2019</option>
                                                     <option value="2020">2020</option>
 													<option value="2021">2021</option>
+													<option value="2022">2022</option>
 												</select>
                                                 <div class="form-group">
                                                     <input type="submit" name="tampilkan" value="Tampilkan" class="btn btn-primary btn-sm">
@@ -149,14 +104,14 @@ date_default_timezone_set('Asia/Jakarta');
 						<div class="col-md-12">
 							<div class="card">
 								<div class="card-header">
-									<div class="card-tools">
+									<!-- <div class="card-tools">
 											<a href="cetak_tahun.php?tahun=<?php echo $tahun;?>" target="_blank" class="btn btn-info btn-border btn-round btn-sm">
 												<span class="btn-label">
 													<i class="fa fa-print"></i>
 												</span>
 												Print
 											</a>
-										</div>
+										</div> -->
 								</div>
 								<div class="card-body">
 									<table class="table mt-3">
@@ -164,10 +119,10 @@ date_default_timezone_set('Asia/Jakarta');
 											<tr>
 												<th scope="col">No</th>
 												<th scope="col">Tanggal ACC</th>
+												<th scope="col">NIK</th>
 												<th scope="col">Nama</th>
-												<th scope="col">Nik</th>
-												<th scope="col">Keperluan</th>
-												<th scope="col">Request</th>
+												<th scope="col">Keterangan</th>
+												<th scope="col">Id Request</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -179,16 +134,16 @@ date_default_timezone_set('Asia/Jakarta');
 													$nama = $data['nama'];
 													$tanggal = $data['acc'];
 													$tgl = date('d F Y', strtotime($tanggal));
-													$keperluan = $data['keperluan'];
-													$request = $data['request'];
+													$keterangan = $data['keterangan'];
+													$id_request = $data['id_request'];
 											?>
 											<tr>
 												<td><?php echo $no;?></td>
 												<td><?php echo $tgl;?></td>
 												<td><?php echo $nik;?></td>
 												<td><?php echo $nama;?></td>
-												<td><?php echo $keperluan;?></td>
-												<td><?php echo $request;?></td>
+												<td><?php echo $keterangan;?></td>
+												<td><?php echo $id_request;?></td>
 											</tr>
 											<?php
 												}
